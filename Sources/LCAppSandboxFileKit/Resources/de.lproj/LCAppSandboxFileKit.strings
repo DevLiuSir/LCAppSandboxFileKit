@@ -1,0 +1,11 @@
+
+/*
+  Localizable.strings
+  
+
+  Created by Liu Chuan on 2022/1/17.
+  
+*/
+
+"alert.title" = "%@ benötigt Zugriff auf diesen Pfad, um fortzufahren. Bitte klicken Sie auf Erlauben.";   // German
+"alert.button.allow" = "Erlauben";   // German

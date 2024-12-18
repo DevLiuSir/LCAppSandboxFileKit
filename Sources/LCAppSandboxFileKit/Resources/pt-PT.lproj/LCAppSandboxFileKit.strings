@@ -1,0 +1,11 @@
+
+/*
+  Localizable.strings
+  
+
+  Created by Liu Chuan on 2022/1/17.
+  
+*/
+
+"alert.title" = "%@ precisa acessar este caminho para continuar. Clique em permitir.";   // Portuguese
+"alert.button.allow" = "Permitir";   // Portuguese

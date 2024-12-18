@@ -1,0 +1,11 @@
+/* 
+  Localizable.strings
+  
+
+  Created by Liu Chuan on 2022/1/17.
+  
+*/
+
+
+"alert.title" = "%@ 需要访问此路径才能继续，请点击授权.";
+"alert.button.allow" = "授权";
