@@ -24,22 +24,19 @@ typealias AppSandboxFileSecurityScopeBlock = (_ securityScopedFileURL: URL, _ bo
 /// 本地化字符串的函数
 /// - Parameter key: 要本地化的字符串键
 /// - Returns: 对应的本地化字符串，如果未找到则返回原始键
-func LCFileAccessLocalizeString(_ key: String) -> String {
-    // 使用静态变量以确保只创建一次
-    var bundle: Bundle?
-    var onceToken: Int = 0
-    
-    // 确保线程安全
-    // 检查一次标记以防止多次创建
-    if onceToken == 0 {
-        onceToken = 1
-        // 获取LCAppSandboxFileKit的bundle
-        bundle = Bundle(for: LCAppSandboxFileKit.self)
+public func LCFileAccessLocalizeString(_ key: String) -> String {
+    #if SWIFT_PACKAGE
+    // 如果是通过 Swift Package Manager 使用
+    return Bundle.module.localizedString(forKey: key, value: "", table: "LCUpdateManager")
+    #else
+    // 如果是通过 CocoaPods 使用
+    struct StaticBundle {
+        static let bundle: Bundle = {
+            return Bundle(for: LCUpdateManager.self)
+        }()
     }
-    
-    // 使用指定的键从bundle中获取本地化字符串
-    // 如果未找到，返回原始键
-    return bundle?.localizedString(forKey: key, value: "", table: "LCAppSandboxFileKit") ?? key
+    return StaticBundle.bundle.localizedString(forKey: key, value: "", table: "LCUpdateManager")
+    #endif
 }
 
 
