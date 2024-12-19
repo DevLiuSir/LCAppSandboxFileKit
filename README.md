@@ -1,7 +1,7 @@
 <p align="center">
-<img src="./Design/Icons.jpg" width="300">
+<img src="./Design/Icons.jpg" width="500">
 
-<p align="center"> <b> LCAppSandboxFileKit is a function to write and access files outside of the macOS application sandbox file!</b></p>
+<p align="center"> <b> LCAppSandboxFileKit is a framework for writing and accessing files outside of the macOS application sandbox file!</b></p>
 
 <p align="center">
 <img src="https://badgen.net/badge/icon/apple?icon=apple&label">
@@ -19,6 +19,12 @@
 <img src="https://img.shields.io/github/watchers/DevLiuSir/LCAppSandboxFileKit?style=social">
 <a href="https://twitter.com/LiuChuan_"><img src="https://img.shields.io/twitter/follow/LiuChuan_.svg?style=social"></a>
 </p>
+
+
+
+
+> [中文](README_CN.md) | [English](README.md)
+
 
 
 
