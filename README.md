@@ -4,6 +4,12 @@
 <p align="center"> <b> LCAppSandboxFileKit is a framework for writing and accessing files outside of the macOS application sandbox file!</b></p>
 
 <p align="center">
+  <a href="https://swiftpackageindex.com/DevLiuSir/LCAppSandboxFileKit">
+        <img src="https://img.shields.io/endpoint?url=https://swiftpackageindex.com/api/packages/DevLiuSir/LCAppSandboxFileKit/badge?type=swift-versions" alt="Swift Versions">
+    </a>
+    <a href="https://swiftpackageindex.com/DevLiuSir/LCAppSandboxFileKit">
+        <img src="https://img.shields.io/endpoint?url=https://swiftpackageindex.com/api/packages/DevLiuSir/LCAppSandboxFileKit/badge?type=platforms" alt="Supported Platforms">
+    </a>
 <img src="https://badgen.net/badge/icon/apple?icon=apple&label">
 <img src="https://img.shields.io/badge/language-swift-orange.svg">
 <img src="https://img.shields.io/badge/macOS-10.14-blue.svg">
