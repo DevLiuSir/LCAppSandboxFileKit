@@ -24,19 +24,14 @@ typealias AppSandboxFileSecurityScopeBlock = (_ securityScopedFileURL: URL, _ bo
 /// 本地化字符串的函数
 /// - Parameter key: 要本地化的字符串键
 /// - Returns: 对应的本地化字符串，如果未找到则返回原始键
-public func localizeString(_ key: String) -> String {
-    #if SWIFT_PACKAGE
+func LCFileAccessLocalizeString(_ key: String) -> String {
+#if SWIFT_PACKAGE
     // 如果是通过 Swift Package Manager 使用
     return Bundle.module.localizedString(forKey: key, value: "", table: "LCAppSandboxFileKit")
-    #else
-    // 如果是通过 CocoaPods 使用
-    struct StaticBundle {
-        static let bundle: Bundle = {
-            return Bundle(for: LCUpdateManager.self)
-        }()
-    }
-    return StaticBundle.bundle.localizedString(forKey: key, value: "", table: "LCAppSandboxFileKit")
-    #endif
+#else
+    // 使用指定的键从bundle中获取本地化字符串
+    return Bundle(for: LCAppSandboxFileKit.self).localizedString(forKey: key, value: "", table: "LCAppSandboxFileKit")
+#endif
 }
 
 
@@ -82,8 +77,8 @@ class LCAppSandboxFileAccess {
     
     // 初始化方法，设置默认值并创建默认的委托对象
     init() {
-        title = localizeString("alert.title")
-        prompt = localizeString("alert.button.allow")
+        title = LCFileAccessLocalizeString("alert.title")
+        prompt = LCFileAccessLocalizeString("alert.button.allow")
         message = String(format: title, arguments: [KApplicationName])
     }
     
