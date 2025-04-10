@@ -1,0 +1,9 @@
+//
+//  Localizable.strings
+//
+//  Created by DevLiuSir on 2019/3/2.
+//
+
+
+"alert.title" = "%@ нужно доступ к пути для продолжения, нажмите для разрешения.";
+"alert.button.allow" = "Разрешить";

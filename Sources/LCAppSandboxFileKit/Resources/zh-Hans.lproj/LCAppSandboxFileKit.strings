@@ -1,10 +1,8 @@
-/* 
-  Localizable.strings
-  
-
-  Created by Liu Chuan on 2022/1/17.
-  
-*/
+//
+//  Localizable.strings
+//
+//  Created by DevLiuSir on 2019/3/2.
+//
 
 
 "alert.title" = "%@ 需要访问此路径才能继续，请点击授权.";

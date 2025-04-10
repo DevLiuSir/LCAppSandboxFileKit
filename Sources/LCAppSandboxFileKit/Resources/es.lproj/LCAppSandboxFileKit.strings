@@ -1,12 +1,9 @@
-
-/*
-  Localizable.strings
-  
-
-  Created by Liu Chuan on 2022/1/17.
-  
-*/
+//
+//  Localizable.strings
+//
+//  Created by DevLiuSir on 2019/3/2.
+//
 
 
-"alert.title" = "%@ necesita acceso a esta ruta para continuar. Por favor, haga clic en permitir.";   // Spanish
-"alert.button.allow" = "Permitir";   // Spanish
+"alert.title" = "%@ necesita acceso a esta ruta para continuar. Por favor, haga clic en permitir.";
+"alert.button.allow" = "Permitir";

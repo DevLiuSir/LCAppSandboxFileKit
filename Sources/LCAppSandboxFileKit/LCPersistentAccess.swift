@@ -1,6 +1,6 @@
 //
-//  LCAppSandboxFileAccessPersist.swift
-//  IPSWLibrary
+//  LCPersistentAccess.swift
+//  
 //
 //  Created by DevLiuSir on 2019/12/20.
 //
@@ -10,7 +10,7 @@ import Foundation
 
 
 /// 应用程序`沙箱文件访问持久`
-class LCAppSandboxFileAccessPersist: NSObject {
+class LCPersistentAccess: NSObject {
 
     
     /// `生成给定URL`的书签数据的`键`
@@ -33,7 +33,7 @@ class LCAppSandboxFileAccessPersist: NSObject {
         while true {
             
             // 获取与URL对应的书签数据的键
-            let key = LCAppSandboxFileAccessPersist.keyForBookmarkData(for: subURL)
+            let key = LCPersistentAccess.keyForBookmarkData(for: subURL)
             
             // 尝试从UserDefaults中获取书签数据
             if let bookmark = defaults.data(forKey: key) {
@@ -60,7 +60,7 @@ class LCAppSandboxFileAccessPersist: NSObject {
     ///   - url: 要设置书签数据的URL
     func setBookmarkData(_ data: Data, for url: URL) {
         let defaults = UserDefaults.standard
-        let key = LCAppSandboxFileAccessPersist.keyForBookmarkData(for: url)
+        let key = LCPersistentAccess.keyForBookmarkData(for: url)
         defaults.set(data, forKey: key)
     }
 
@@ -70,7 +70,7 @@ class LCAppSandboxFileAccessPersist: NSObject {
     /// - Parameter url: 要清除书签数据的URL
     func clearBookmarkData(for url: URL) {
         let defaults = UserDefaults.standard
-        let key = LCAppSandboxFileAccessPersist.keyForBookmarkData(for: url)
+        let key = LCPersistentAccess.keyForBookmarkData(for: url)
         defaults.removeObject(forKey: key)
     }
     

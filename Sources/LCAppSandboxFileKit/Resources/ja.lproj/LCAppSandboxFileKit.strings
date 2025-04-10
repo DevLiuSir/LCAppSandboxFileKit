@@ -1,11 +1,9 @@
+//
+//  Localizable.strings
+//
+//  Created by DevLiuSir on 2019/3/2.
+//
 
-/*
-  Localizable.strings
-  
 
-  Created by Liu Chuan on 2022/1/17.
-  
-*/
-
-"alert.title" = "%@ はこのパスにアクセスする必要があります。許可をクリックしてください。";   // Japanese
-"alert.button.allow" = "許可";   // Japanese
+"alert.title" = "%@ はこのパスにアクセスする必要があります。許可をクリックしてください。";
+"alert.button.allow" = "許可";

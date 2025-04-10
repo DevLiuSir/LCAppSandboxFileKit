@@ -1,0 +1,9 @@
+//
+//  Localizable.strings
+//
+//  Created by DevLiuSir on 2019/3/2.
+//
+
+
+"alert.title" = "%@ deve accedere a questo percorso per continuare, clicca per autorizzare.";
+"alert.button.allow" = "Autorizza";

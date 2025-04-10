@@ -1,6 +1,6 @@
 //
-//  LCAppSandboxFileAccessOpenSavePanelDelegate.swift
-//  IPSWLibrary
+//  LCOpenSavePanelDelegate.swift
+//  
 //
 //  Created by DevLiuSir on 2019/12/20.
 //
@@ -9,7 +9,7 @@
 import Cocoa
 
 /// 应用程序`沙盒文件访问`打开` SavePanel 委托`
-class LCAppSandboxFileAccessOpenSavePanelDelegate: NSObject, NSOpenSavePanelDelegate {
+class LCOpenSavePanelDelegate: NSObject, NSOpenSavePanelDelegate {
     
     /// 文件URL的路径组件
     var pathComponents: [String]

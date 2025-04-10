@@ -1,6 +1,6 @@
 //
 //  LCAppSandboxFileAccess.swift
-//  IPSWLibrary
+//  
 //
 //  Created by DevLiuSir on 2019/12/20.
 //
@@ -65,15 +65,13 @@ class LCAppSandboxFileAccess {
     var prompt: String = ""
     
     /// 创建默认的委托对象，用于持久化书签数据到用户默认值
-    var accessPersist = LCAppSandboxFileAccessPersist()
+    var accessPersist = LCPersistentAccess()
     
     /// 创建一个 LCAppSandboxFileAccess 对象
     static var fileAccess = LCAppSandboxFileAccess()
     
     /// 是否允许开启文件夹选择， 默认：false
     var canChooseDirectories: Bool = false
-    
-    
     
     // 初始化方法，设置默认值并创建默认的委托对象
     init() {
@@ -100,7 +98,7 @@ class LCAppSandboxFileAccess {
 
         // 创建OpenPanel委托以限制可以选择的文件
         // 确保只能选择一个文件夹或可以选择授予所请求文件权限的文件
-        let openPanelDelegate = LCAppSandboxFileAccessOpenSavePanelDelegate(fileURL: url, canChooseDirectories: canChooseDirectories)
+        let openPanelDelegate = LCOpenSavePanelDelegate(fileURL: url, canChooseDirectories: canChooseDirectories)
 
         // 检查url是否存在，如果不存在，找到存在的url的父路径并请求权限
         let fileManager = FileManager.default
