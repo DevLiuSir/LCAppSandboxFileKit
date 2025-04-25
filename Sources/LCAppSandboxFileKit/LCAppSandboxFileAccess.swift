@@ -36,7 +36,7 @@ func LCFileAccessLocalizeString(_ key: String) -> String {
 
 
 /// 应用程序的显示名称
-fileprivate let KApplicationName: String = {
+public let KApplicationName: String = {
     // 获取主应用程序的 Bundle
     let mainBundle = Bundle.main
     
@@ -61,8 +61,8 @@ class LCAppSandboxFileAccess {
     /// 在请求文件访问权限时显示的`消息`
     var message: String = ""
     
-    /// 在请求文件访问权限时, 显示的`按钮文本`
-    var prompt: String = ""
+    /// 打开面板中，按钮的文本
+    var panelButtonTitle: String = ""
     
     /// 创建默认的委托对象，用于持久化书签数据到用户默认值
     var accessPersist = LCPersistentAccess()
@@ -76,8 +76,8 @@ class LCAppSandboxFileAccess {
     // 初始化方法，设置默认值并创建默认的委托对象
     init() {
         title = LCFileAccessLocalizeString("alert.title")
-        prompt = LCFileAccessLocalizeString("alert.button.allow")
-        message = String(format: title, arguments: [KApplicationName])
+        panelButtonTitle = LCFileAccessLocalizeString("alert.button.allow")
+        message = ""
     }
     
     
@@ -116,7 +116,7 @@ class LCAppSandboxFileAccess {
             let openPanel = NSOpenPanel()
             openPanel.title = self.title
             openPanel.message = self.message            // 要在NSOpenPanel对象顶部显示文本或指令
-            openPanel.prompt = self.prompt
+            openPanel.prompt = self.panelButtonTitle
             openPanel.canCreateDirectories = false       // 是否允许用户创建目录。
             openPanel.canChooseFiles = false             // 是否允许用户选择文件
             openPanel.canChooseDirectories = true        // 是否允许用户选择要打开的 文件夹

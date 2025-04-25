@@ -18,11 +18,28 @@ public class LCAppSandboxFileKit: NSObject {
     /// 请求访问`指定路径` (一般用于 `/` 根目录)
     /// - Parameters:
     ///   - path: 需要访问的路径
+    ///   - title: 可选，授权提示框的标题文本，默认会拼接应用名称；如果未提供，则使用默认本地化标题。
+    ///   - panelButtonTitle: 可选，授权窗口中按钮的标题（例如“授权），如果未提供，则使用默认值。
     ///   - canChooseDirectories: 是否允许选择目录。如果为 `true`，用户可以选择目录；如果为 `false`，用户只能选择文件。
     ///   - completion: 当访问路径完成时的回调，如果成功获取路径权限，则返回 true，否则返回 false
-    public func requestAccessForPath(_ path: String, canChooseDirectories: Bool, completion: @escaping (Bool) -> Void) {
+    public func requestAccessForPath(_ path: String, title: String? = nil, panelButtonTitle: String? = nil, canChooseDirectories: Bool, completion: @escaping (Bool) -> Void) {
+        
         // 创建一个沙盒文件访问对象
         let fileAccess = LCAppSandboxFileAccess()
+        
+        // 设置标题和消息
+        if let customTitle = title, !customTitle.isEmpty {
+            // 如果传入了自定义标题，拼接应用名并设置消息
+            let fullTitle = "\(KApplicationName) \(customTitle)"
+            fileAccess.title = fullTitle
+            fileAccess.message = String(format: fullTitle, KApplicationName)
+        } else {
+            // 使用初始化时默认的 title 和消息
+            fileAccess.message = String(format: fileAccess.title, KApplicationName)
+        }
+        
+        // 设置按钮文本 prompt
+        fileAccess.panelButtonTitle = panelButtonTitle ?? fileAccess.panelButtonTitle
         
         // 设置是否允许选择目录
         fileAccess.canChooseDirectories = canChooseDirectories
@@ -74,5 +91,14 @@ public class LCAppSandboxFileKit: NSObject {
     }
     
     
+    /// 清除`所有保存`的书签数据
+    public func clearAllBookmarkData() {
+        let defaults = UserDefaults.standard
+        let allKeys = defaults.dictionaryRepresentation().keys
+        
+        for key in allKeys where key.hasPrefix("bd_") {
+            defaults.removeObject(forKey: key)
+        }
+    }
     
 }
