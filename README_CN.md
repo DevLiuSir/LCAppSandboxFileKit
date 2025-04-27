@@ -56,6 +56,18 @@ LCAppSandboxFileKit.standard.clearAccessForPath(authorizedDirectory) { status in
 
 
 
+
+- 清除所有路径的访问权限
+
+```swift
+LCAppSandboxFileKit.standard.clearAllBookmarkData()
+```
+
+
+
+
+
+
 - 检查目录是否有访问权限
 
 ```swift
@@ -73,6 +85,23 @@ if isPermiss {
     }
 }
 ```
+
+
+
+
+- 请求指定路径的访问权限，自定义面板信息
+
+```swift
+ LCAppSandboxFileKit.standard.requestAccessForPath("/", title: "custom title", panelButtonTitle: "button title", canChooseDirectories: true) { status in
+     if status {
+        print("Permission granted, proceeding with the process.")
+    } else {
+        print("Failed to obtain permission.")
+    }
+}
+```
+
+
 
 
 
