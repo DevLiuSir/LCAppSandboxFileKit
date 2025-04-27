@@ -60,6 +60,13 @@ LCAppSandboxFileKit.standard.clearAccessForPath(authorizedDirectory) { status in
 
 
 
+- Clear access permissions for all paths
+
+```swift
+LCAppSandboxFileKit.standard.clearAllBookmarkData()
+```
+
+
 
 - Check if the directory has access permissions
 
@@ -79,6 +86,19 @@ if isPermiss {
 }
 ```
 
+
+
+- Request access permissions for the specified path，Customize panel information
+
+```swift
+LCAppSandboxFileKit.standard.requestAccessForPath("/", title: "custom title", panelButtonTitle: "button title", canChooseDirectories: true) { status in
+     if status {
+        print("Permission granted, proceeding with the process.")
+    } else {
+        print("Failed to obtain permission.")
+    }
+}
+```
 
 
 ### Design
