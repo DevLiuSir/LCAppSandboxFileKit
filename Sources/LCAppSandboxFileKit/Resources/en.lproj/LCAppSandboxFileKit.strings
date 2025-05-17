@@ -6,4 +6,7 @@
 
 
 "alert.title" = "%@ needs access to this path to continue. Please click allow.";
-"alert.button.allow" = "Allow";  
+"alert.button.allow" = "Allow";
+
+"auth_root_dir" = "Authorization Root Directory";
+"auth_root_dir_msg" = "1. %@ does not have permission to read or write this folder. Please click 'Authorize'.\n2. It is recommended to authorize the root directory so you don't have to authorize again in the future.";

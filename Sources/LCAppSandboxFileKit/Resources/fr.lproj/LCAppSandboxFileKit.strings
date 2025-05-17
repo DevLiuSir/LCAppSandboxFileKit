@@ -8,3 +8,5 @@
 "alert.title" = "%@ doit accéder à ce chemin pour continuer. Veuillez cliquer sur autoriser.";
 "alert.button.allow" = "Autoriser";
 
+"auth_root_dir" = "Autoriser dossier racine";
+"auth_root_dir_msg" = "1. %@ n’a pas la permission de lire ou d’écrire dans ce dossier. Veuillez cliquer sur « Autoriser ».\n2. Il est recommandé d’autoriser le répertoire racine pour ne plus avoir à autoriser par la suite.";

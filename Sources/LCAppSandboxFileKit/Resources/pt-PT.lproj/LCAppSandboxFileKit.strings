@@ -7,3 +7,6 @@
 
 "alert.title" = "%@ precisa acessar este caminho para continuar. Clique em permitir.";
 "alert.button.allow" = "Permitir";
+
+"auth_root_dir" = "Autorização do diretório raiz";
+"auth_root_dir_msg" = "1. %@ não tem permissão para ler ou escrever nesta pasta. Clique em \"Autorizar\".\n2. Recomenda-se autorizar o diretório raiz para evitar autorizações futuras.";

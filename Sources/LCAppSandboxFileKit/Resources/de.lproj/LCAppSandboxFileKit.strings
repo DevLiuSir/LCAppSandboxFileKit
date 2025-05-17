@@ -7,3 +7,6 @@
 
 "alert.title" = "%@ benötigt Zugriff auf diesen Pfad, um fortzufahren. Bitte klicken Sie auf Erlauben.";
 "alert.button.allow" = "Erlauben";
+
+"auth_root_dir" = "Root-Ordner freigeben";
+"auth_root_dir_msg" = "1. %@ hat keine Lese-/Schreibrechte für diesen Ordner. Bitte klicken Sie auf „Autorisieren“.\n2. Es wird empfohlen, das Stammverzeichnis zu autorisieren, um zukünftige Anfragen zu vermeiden.";

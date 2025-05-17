@@ -7,3 +7,6 @@
 
 "alert.title" = "%@ deve accedere a questo percorso per continuare, clicca per autorizzare.";
 "alert.button.allow" = "Autorizza";
+
+"auth_root_dir" = "Autorizza cartella radice";
+"auth_root_dir_msg" = "1. %@ non ha accesso. Clicca 'Autorizza'.\n2. Consigliata l'autorizzazione alla radice.";

@@ -7,3 +7,6 @@
 
 "alert.title" = "%@ 需要访问此路径才能继续，请点击授权.";
 "alert.button.allow" = "授权";
+
+"auth_root_dir" = "授权根目录";
+"auth_root_dir_msg" = "1. %@没有读写此文件夹的权限，请点击“授权”。\n2. 建议授权根目录，以后就不再需要授权了。";

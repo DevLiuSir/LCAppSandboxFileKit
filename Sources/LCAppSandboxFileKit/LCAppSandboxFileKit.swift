@@ -20,9 +20,10 @@ public class LCAppSandboxFileKit: NSObject {
     ///   - path: 需要访问的路径
     ///   - title: 可选，授权提示框的标题文本，默认会拼接应用名称；如果未提供，则使用默认本地化标题。
     ///   - panelButtonTitle: 可选，授权窗口中按钮的标题（例如“授权），如果未提供，则使用默认值。
+    ///   - isRootOptionEnabled: 可选，是否允许显示`授权根目录选项`附件视图
     ///   - canChooseDirectories: 是否允许选择目录。如果为 `true`，用户可以选择目录；如果为 `false`，用户只能选择文件。
     ///   - completion: 当访问路径完成时的回调，如果成功获取路径权限，则返回 true，否则返回 false
-    public func requestAccessForPath(_ path: String, title: String? = nil, panelButtonTitle: String? = nil, canChooseDirectories: Bool, completion: @escaping (Bool) -> Void) {
+    public func requestAccessForPath(_ path: String, title: String? = nil, panelButtonTitle: String? = nil, isRootOptionEnabled: Bool = false, canChooseDirectories: Bool, completion: @escaping (Bool) -> Void) {
         
         // 创建一个沙盒文件访问对象
         let fileAccess = LCAppSandboxFileAccess()
@@ -37,6 +38,8 @@ public class LCAppSandboxFileKit: NSObject {
             // 使用初始化时默认的 title 和消息
             fileAccess.message = String(format: fileAccess.title, KApplicationName)
         }
+        // 设置是否启用根目录授权选项（决定是否显示 accessoryView）
+        fileAccess.isRootOptionEnabled = isRootOptionEnabled
         
         // 设置按钮文本 prompt
         fileAccess.panelButtonTitle = panelButtonTitle ?? fileAccess.panelButtonTitle

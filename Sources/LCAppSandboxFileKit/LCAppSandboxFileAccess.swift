@@ -1,6 +1,6 @@
 //
 //  LCAppSandboxFileAccess.swift
-//  
+//
 //
 //  Created by DevLiuSir on 2019/12/20.
 //
@@ -42,10 +42,10 @@ public let KApplicationName: String = {
     
     // 尝试从不同的字典中获取应用程序的显示名称
     let appName = mainBundle.localizedInfoDictionary?["CFBundleDisplayName"] as? String
-        ?? mainBundle.infoDictionary?["CFBundleDisplayName"] as? String
-        ?? mainBundle.localizedInfoDictionary?["CFBundleName"] as? String
-        ?? mainBundle.infoDictionary?["CFBundleName"] as? String
-
+    ?? mainBundle.infoDictionary?["CFBundleDisplayName"] as? String
+    ?? mainBundle.localizedInfoDictionary?["CFBundleName"] as? String
+    ?? mainBundle.infoDictionary?["CFBundleName"] as? String
+    
     // 如果所有方法都未能获取到应用程序名称，则返回默认值
     return appName ?? "默认应用程序名称" // 提供一个默认值
 }()
@@ -64,14 +64,20 @@ class LCAppSandboxFileAccess {
     /// 打开面板中，按钮的文本
     var panelButtonTitle: String = ""
     
+    /// 是否允许显示`授权根目录选项`附件视图
+    var isRootOptionEnabled: Bool = false
+    
+    /// 是否允许开启文件夹选择， 默认：false
+    var canChooseDirectories: Bool = false
+    
     /// 创建默认的委托对象，用于持久化书签数据到用户默认值
     var accessPersist = LCPersistentAccess()
     
     /// 创建一个 LCAppSandboxFileAccess 对象
     static var fileAccess = LCAppSandboxFileAccess()
     
-    /// 是否允许开启文件夹选择， 默认：false
-    var canChooseDirectories: Bool = false
+    // 用于记录当前显示的 NSOpenPanel 实例，用于后续控制（如手动关闭面板）
+    private var currentOpenPanel: NSOpenPanel?
     
     // 初始化方法，设置默认值并创建默认的委托对象
     init() {
@@ -79,7 +85,6 @@ class LCAppSandboxFileAccess {
         panelButtonTitle = LCFileAccessLocalizeString("alert.button.allow")
         message = ""
     }
-    
     
     /// 请求文件访问权限的函数
     ///
@@ -95,11 +100,11 @@ class LCAppSandboxFileAccess {
         
         // 允许的URL，可能是传入URL的父URL
         var allowedURL: URL?
-
+        
         // 创建OpenPanel委托以限制可以选择的文件
         // 确保只能选择一个文件夹或可以选择授予所请求文件权限的文件
         let openPanelDelegate = LCOpenSavePanelDelegate(fileURL: url, canChooseDirectories: canChooseDirectories)
-
+        
         // 检查url是否存在，如果不存在，找到存在的url的父路径并请求权限
         let fileManager = FileManager.default
         var path = url.path
@@ -110,36 +115,48 @@ class LCAppSandboxFileAccess {
             path = (path as NSString).deletingLastPathComponent
         }
         let updatedURL = URL(fileURLWithPath: path)
-
+        
         // 显示打开面板
         let displayOpenPanelBlock = {
             let openPanel = NSOpenPanel()
-            openPanel.title = self.title
-            openPanel.message = self.message            // 要在NSOpenPanel对象顶部显示文本或指令
-            openPanel.prompt = self.panelButtonTitle
-            openPanel.canCreateDirectories = false       // 是否允许用户创建目录。
-            openPanel.canChooseFiles = false             // 是否允许用户选择文件
-            openPanel.canChooseDirectories = true        // 是否允许用户选择要打开的 文件夹
-            openPanel.directoryURL = updatedURL
-            openPanel.delegate = openPanelDelegate
+            openPanel.title = self.title                         // 设置面板窗口的标题
+            openPanel.message = self.message                     // 在NSOpenPanel顶部显示的提示文本或说明
+            openPanel.prompt = self.panelButtonTitle             // 面板按钮的标题，通常是“授权”
+            openPanel.canCreateDirectories = false               // 是否允许用户创建目录。
+            openPanel.canChooseFiles = false                     // 是否允许用户选择文件
+            openPanel.canChooseDirectories = true                // 是否允许用户选择要打开的 文件夹
+            openPanel.allowsMultipleSelection = false            // 不允许用户多选，只能选择一个目录
+            openPanel.showsHiddenFiles = false                   // 不显示隐藏文件和目录
+            openPanel.isExtensionHidden = false                  // 显示文件扩展名（虽然这里只选择目录，也适用）
+            openPanel.isAccessoryViewDisclosed = true            // 展开附加视图（如果有 accessoryView 的话）
+            openPanel.directoryURL = updatedURL                  // 设置默认打开的目录路径
+            openPanel.delegate = openPanelDelegate               // 设置面板的代理对象，用于自定义行为
+            
+            self.currentOpenPanel = openPanel                    // 保存当前打开的 NSOpenPanel 引用，以便后续操作（如关闭面板）
+            
+            // 如果当前路径不是根目录，并且允许显示根目录授权选项，则为打开面板添加附件视图
+            if url.path != "/" && self.isRootOptionEnabled {
+                openPanel.accessoryView = self.createRootAuthAccessoryView()
+                openPanel.isAccessoryViewDisclosed = true
+            }
+            
             NSApp.activate(ignoringOtherApps: true)
-
+            
             // 用户选择了文件夹后，更新allowedURL
             if openPanel.runModal() == NSApplication.ModalResponse.OK {
                 allowedURL = openPanel.url
             }
         }
-
+        
         // 在主线程上执行显示Open Panel的操作
         if Thread.isMainThread {
             displayOpenPanelBlock()
         } else {
             DispatchQueue.main.sync(execute: displayOpenPanelBlock)
         }
-
+        
         return allowedURL
     }
-    
     
     /// 用于`请求对文件路径`的访问权限，并执行相应的闭包
     ///
@@ -193,7 +210,6 @@ class LCAppSandboxFileAccess {
     private func requestAccessPermissions(forFilePath filePath: String, persistPermission persist: Bool, withBlock block: @escaping AppSandboxFileSecurityScopeBlock) -> Bool {
         return requestAccessPermissions(forFileURL: URL(fileURLWithPath: filePath), persistPermission: persist, withCompletion: block)
     }
-
     
     
     /// 持久化文件访问权限的书签数据，返回书签数据。
@@ -232,7 +248,7 @@ class LCAppSandboxFileAccess {
         
         // 尝试获取允许访问的 URL
         var allowedURL = resolveAllowedURL(fromBookmarkData: bookmarkData, forFileURL: fileURL, persistPermission: persist)
-
+        
         // 如果没有有效的允许访问的 URL，请求用户权限
         if allowedURL == nil {
             allowedURL = askPermission(for: fileURL)
@@ -240,15 +256,15 @@ class LCAppSandboxFileAccess {
                 return false
             }
         }
-
+        
         // 如果需要持久化权限，并且之前没有书签数据，则进行持久化
         persistPermissionIfNeeded(forURL: allowedURL, shouldPersist: persist)
-
+        
         // 执行传入的闭包，将允许访问的 URL 和相关的书签数据传递给闭包
         completion(allowedURL!, bookmarkData)
         return true
     }
-
+    
     
     /// 通过书签数据解析得到允许访问的 URL
     ///
@@ -262,11 +278,11 @@ class LCAppSandboxFileAccess {
         guard let bookmarkData = bookmarkData else {
             return nil
         }
-
+        
         var bookmarkDataIsStale = false
         // 通过书签数据解析得到允许访问的 URL
         var allowedURL = try? URL(resolvingBookmarkData: bookmarkData, options: .withSecurityScope, relativeTo: nil, bookmarkDataIsStale: &bookmarkDataIsStale)
-
+        
         // 如果书签数据已经过期，清除该书签数据，并在需要持久化权限时重新持久化
         if bookmarkDataIsStale {
             accessPersist.clearBookmarkData(for: fileURL)
@@ -275,7 +291,6 @@ class LCAppSandboxFileAccess {
         
         return allowedURL
     }
-
     
     
     /// 如果需要持久化权限，进行持久化
@@ -288,11 +303,10 @@ class LCAppSandboxFileAccess {
         guard let url = url, persist else {
             return
         }
-        
         // 执行持久化权限的操作
         _ = persistPermissionURL(url)
     }
-
+    
     
     /// 检查`给定的路径`的是否具有`访问权限`
     ///
@@ -317,19 +331,18 @@ class LCAppSandboxFileAccess {
             print("\(#function) 传入的路径不正确")
             return false
         }
-
+        
         let fileURL = fileUrl.standardized.resolvingSymlinksInPath()
-
+        
         // 获取书签数据
         guard let bookmarkData = fileAccess.accessPersist.bookmarkData(for: fileURL) else {
             print("\(#function) 未找到书签数据: \(fileURL.path)")
             return false
         }
-
         // 尝试解析书签数据
         return resolveBookmarkData(bookmarkData, for: fileURL, using: fileAccess)
     }
-
+    
     /// `解析`书签数据, 并`检查访问权限`
     ///
     /// - Parameter bookmarkData: 书签数据
@@ -346,7 +359,7 @@ class LCAppSandboxFileAccess {
                 relativeTo: nil,
                 bookmarkDataIsStale: &bookmarkDataIsStale
             )
-
+            
             // 检查书签数据是否过期
             if bookmarkDataIsStale {
                 // 如果过期，清除旧的书签数据
@@ -354,7 +367,7 @@ class LCAppSandboxFileAccess {
                 print("\(#function) 授权已过期：\(fileURL.path)")
                 return false
             }
-
+            
             // 尝试访问安全作用域资源
             if allowedURL.startAccessingSecurityScopedResource() {
                 return true
@@ -362,7 +375,6 @@ class LCAppSandboxFileAccess {
                 print("\(#function) 无法访问安全范围资源：\(fileURL.path)")
                 return false
             }
-
         } catch {
             // 捕获解析书签数据时的错误
             print("\(#function) 无法解析 bookmark 数据: \(error)")
@@ -370,8 +382,67 @@ class LCAppSandboxFileAccess {
         }
     }
     
+}
+
+
+
+//MARK: - `授权根目录`的 附件面板
+extension LCAppSandboxFileAccess {
     
+    /// 创建用于`授权根目录`的 附件面板，包含一个按钮和一段提示信息
+    private func createRootAuthAccessoryView() -> NSView {
+        // 创建按钮
+        let authorizeButton = NSButton(title: LCFileAccessLocalizeString("auth_root_dir"),
+                                       target: self,
+                                       action: #selector(self.authRootPath))
+        authorizeButton.bezelColor = .controlAccentColor
+        authorizeButton.translatesAutoresizingMaskIntoConstraints = false
+        // 创建标签
+        let descriptionLabel = NSTextField(wrappingLabelWithString:
+                                            String(format: LCFileAccessLocalizeString("auth_root_dir_msg"), KApplicationName))
+        descriptionLabel.isEditable = false
+        descriptionLabel.isBordered = false
+        descriptionLabel.backgroundColor = .clear
+        descriptionLabel.translatesAutoresizingMaskIntoConstraints = false
+        
+        // 创建 accessory 容器视图
+        let accessoryView = NSView()
+        accessoryView.translatesAutoresizingMaskIntoConstraints = false
+        accessoryView.addSubview(authorizeButton)
+        accessoryView.addSubview(descriptionLabel)
+        
+        // 设置布局约束
+        NSLayoutConstraint.activate([
+            // 授权按钮靠左
+            authorizeButton.leadingAnchor.constraint(equalTo: accessoryView.leadingAnchor, constant: 20),
+            authorizeButton.centerYAnchor.constraint(equalTo: accessoryView.centerYAnchor),
+            
+            // 标签位于按钮右侧
+            descriptionLabel.leadingAnchor.constraint(equalTo: authorizeButton.trailingAnchor, constant: 10),
+            descriptionLabel.trailingAnchor.constraint(lessThanOrEqualTo: accessoryView.trailingAnchor, constant: -12),
+            descriptionLabel.centerYAnchor.constraint(equalTo: accessoryView.centerYAnchor),
+            
+            // 设置底部约束撑开 accessoryView 的高度
+            descriptionLabel.bottomAnchor.constraint(equalTo: accessoryView.bottomAnchor, constant: -12),
+            // 最小宽度防止过窄
+            accessoryView.widthAnchor.constraint(greaterThanOrEqualToConstant: 300)
+        ])
+        return accessoryView
+    }
     
-    
+    /// 根目录授权按钮点击
+    @objc private func authRootPath(_ btn: NSButton) {
+        btn.isEnabled = false
+        // 1.关闭已打开的面板
+        self.currentOpenPanel?.close()
+        // 2.重新请求根目录,打开面板
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) { [self] in
+            // 尝试访问根目录路径”/“，并在成功时调用回调
+            _ = accessFilePath("/", persistPermission: true) {
+                // 成功获取权限
+                print("已成功获取‘根目录’的访问权限")
+            }
+        }
+    }
     
 }
