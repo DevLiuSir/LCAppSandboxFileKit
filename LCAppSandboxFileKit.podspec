@@ -2,7 +2,7 @@ Pod::Spec.new do |spec|
 
   spec.name           = "LCAppSandboxFileKit"
 
-  spec.version        = "1.0.3"
+  spec.version        = "1.0.4"
   
   spec.summary        = "LCAppSandboxFileKit is a function to write and access files outside of the macOS application sandbox file!"
 
