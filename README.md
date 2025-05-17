@@ -101,8 +101,30 @@ LCAppSandboxFileKit.standard.requestAccessForPath("/", title: "custom title", pa
 ```
 
 
+
+- Request access to the specified path and whether to display the attachment view
+
+```swift
+ LCAppSandboxFileKit.standard.requestAccessForPath("/Users", isRootOptionEnabled: true, canChooseDirectories: true) { status in
+     if status {
+        print("Permission granted, proceeding with the process.")
+    } else {
+        print("Failed to obtain permission.")
+    }
+}
+```
+
+
+
 ### Design
-<img align="center" src="Design/preview.png" width=300> 
+| ![](Design/preview-02.png) |
+| :------------: |
+| Accessory panel |
+
+| ![](Design/preview-01.png)|
+| :------------: |
+| Normal |
+
 
 
 
