@@ -8,7 +8,7 @@ let package = Package(
     name: "LCAppSandboxFileKit",
     defaultLocalization: "en", // 指定默认语言为英文
     platforms: [
-        .macOS(.v10_15) // 指定支持的 macOS 版本
+        .macOS(.v10_14) // 指定支持的 macOS 版本
     ],
     products: [
         .library(
