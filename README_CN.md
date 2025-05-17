@@ -64,10 +64,6 @@ LCAppSandboxFileKit.standard.clearAllBookmarkData()
 ```
 
 
-
-
-
-
 - 检查目录是否有访问权限
 
 ```swift
@@ -87,8 +83,6 @@ if isPermiss {
 ```
 
 
-
-
 - 请求指定路径的访问权限，自定义面板信息
 
 ```swift
@@ -102,11 +96,28 @@ if isPermiss {
 ```
 
 
+- 请求指定路径的访问权限，是否显示附件面板
 
+```swift
+ LCAppSandboxFileKit.standard.requestAccessForPath("/Users", isRootOptionEnabled: true, canChooseDirectories: true) { status in
+     if status {
+        print("Permission granted, proceeding with the process.")
+    } else {
+        print("Failed to obtain permission.")
+    }
+}
+```
 
 
 ### 设计
-<img align="center" src="Design/preview.png" width=300> 
+
+| ![](Design/preview-02.png) |
+| :------------: |
+| 附件面板 |
+
+| ![](Design/preview-01.png)|
+| :------------: |
+| 普通 |
 
 
 ## 安装
