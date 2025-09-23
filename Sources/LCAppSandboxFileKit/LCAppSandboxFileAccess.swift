@@ -134,10 +134,15 @@ class LCAppSandboxFileAccess {
             
             self.currentOpenPanel = openPanel                    // 保存当前打开的 NSOpenPanel 引用，以便后续操作（如关闭面板）
             
-            // 如果当前路径不是根目录，并且允许显示根目录授权选项，则为打开面板添加附件视图
-            if url.path != "/" && self.isRootOptionEnabled {
-                openPanel.accessoryView = self.createRootAuthAccessoryView()
-                openPanel.isAccessoryViewDisclosed = true
+            /* 15.7及以上系统，根目录授权失效，不显示根目录授权按钮 */
+            if #available(macOS 15.7, *) {
+                
+            } else {
+                // 如果当前路径不是根目录，并且允许显示根目录授权选项，则为打开面板添加附件视图
+                if url.path != "/" && self.isRootOptionEnabled {
+                    openPanel.accessoryView = self.createRootAuthAccessoryView()
+                    openPanel.isAccessoryViewDisclosed = true
+                }
             }
             
             NSApp.activate(ignoringOtherApps: true)
