@@ -11,17 +11,8 @@ import Foundation
 
 /// 应用程序`沙箱文件访问持久`
 class LCPersistentAccess: NSObject {
-
     
-    /// `生成给定URL`的书签数据的`键`
-    ///
-    /// - Parameter url: 要生成键的URL
-    /// - Returns: 生成的键
-    class func keyForBookmarkData(for url: URL) -> String {
-        let urlStr = url.absoluteString
-        return "bd_\(urlStr)"
-    }
-
+    
     /// `获取给定URL`的书签数据
     ///
     /// - Parameter url: 要获取书签数据的URL
@@ -33,7 +24,7 @@ class LCPersistentAccess: NSObject {
         while true {
             
             // 获取与URL对应的书签数据的键
-            let key = LCPersistentAccess.keyForBookmarkData(for: subURL)
+            let key = keyForBookmarkData(for: subURL)
             
             // 尝试从UserDefaults中获取书签数据
             if let bookmark = defaults.data(forKey: key) {
@@ -51,7 +42,7 @@ class LCPersistentAccess: NSObject {
         // 未找到URL或其父级的书签
         return nil
     }
-
+    
     
     /// 为`指定的URL``设置`书签数据
     ///
@@ -60,19 +51,28 @@ class LCPersistentAccess: NSObject {
     ///   - url: 要设置书签数据的URL
     func setBookmarkData(_ data: Data, for url: URL) {
         let defaults = UserDefaults.standard
-        let key = LCPersistentAccess.keyForBookmarkData(for: url)
+        let key = keyForBookmarkData(for: url)
         defaults.set(data, forKey: key)
     }
-
+    
     
     /// `清除``指定URL`的书签数据
     ///
     /// - Parameter url: 要清除书签数据的URL
     func clearBookmarkData(for url: URL) {
         let defaults = UserDefaults.standard
-        let key = LCPersistentAccess.keyForBookmarkData(for: url)
+        let key = keyForBookmarkData(for: url)
         defaults.removeObject(forKey: key)
     }
     
+    
+    /// `生成给定URL`的书签数据的`键`
+    ///
+    /// - Parameter url: 要生成键的URL
+    /// - Returns: 生成的键
+    private func keyForBookmarkData(for url: URL) -> String {
+        let urlStr = url.absoluteString
+        return "bd_\(urlStr)"
+    }
     
 }
