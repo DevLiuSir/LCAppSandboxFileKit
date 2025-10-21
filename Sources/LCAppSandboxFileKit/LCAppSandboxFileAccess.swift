@@ -86,6 +86,26 @@ class LCAppSandboxFileAccess {
         message = ""
     }
     
+    
+    
+    
+    /// 当前系统是否允许授权根目录
+    ///  - macOS >= 15.7 : 禁用（返回 false）
+    ///  - macOS 15.0 ~ 15.6 : 允许（返回 true）
+    ///  - macOS 14.8 ~ 14.9.x : 禁用（返回 false）
+    ///  - macOS < 14.8 : 允许（返回 true）
+    public let rootPathAuthIsAvailable = {
+        // macOS 15.7 及以上禁用
+         if #available(macOS 15.7, *) { return false }
+         // macOS 15.0 ~ 15.6 允许
+         if #available(macOS 15.0, *) { return true }
+         // macOS 14.8 ~ 14.9.x 禁用
+         if #available(macOS 14.8, *) { return false }
+         // macOS 14.7 及以下允许
+         return true
+    }()
+    
+    
     /// 请求文件访问权限的函数
     ///
     /// - Parameters:
@@ -134,10 +154,8 @@ class LCAppSandboxFileAccess {
             
             self.currentOpenPanel = openPanel                    // 保存当前打开的 NSOpenPanel 引用，以便后续操作（如关闭面板）
             
-            /* 15.7及以上系统，根目录授权失效，不显示根目录授权按钮 */
-            if #available(macOS 15.7, *) {
-                
-            } else {
+            // 仅当 rootPathAuthIsAvailable 为 true 时才显示根目录授权附件视图。
+            if self.rootPathAuthIsAvailable {
                 // 如果当前路径不是根目录，并且允许显示根目录授权选项，则为打开面板添加附件视图
                 if url.path != "/" && self.isRootOptionEnabled {
                     openPanel.accessoryView = self.createRootAuthAccessoryView()
